@@ -23,4 +23,6 @@ Route::post("/projects/create", [ClientController::class, 'projectCreate']);
 
 Route::post("/entries/create", [ClientController::class, 'createEntry']);
 
+Route::put("/entries/update", [ClientController::class, 'updateEntry']);
+
 Route::get('/project/status/update/{id}', [ClientController::class, 'projectStatusUpdate']);

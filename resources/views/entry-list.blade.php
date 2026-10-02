@@ -4,6 +4,16 @@
 
 @section('content')
 <section class="folder_sec p-0">
+    @if(session()->has('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{session('success')}}</strong>
+    </div>
+    @elseif(session()->has('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>{{session('error')}}</strong>
+    </div>
+
+    @endif
     <div class="inner_folder">
 
         {{-- Exporter Information Box --}}
@@ -22,8 +32,9 @@
                         {{ $client->mobile ?? '-' }}
                     </a>
                 </li>
-                <li>Total Projects: {{ $exporter->total_projects ?? 5 }}</li>
-                <li>Active Projects: {{ $exporter->active_projects ?? 5 }}</li>
+                <li>Total Bill: {{ number_format($entries->sum('bill_amount'), 2) ?? 5 }}</li>
+                <li>Total Advance: {{number_format($entries->sum('advance'), 2)}} </li>
+                <li>Total Due: {{number_format($entries->sum('due'), 2)}} </li>
             </ul>
         </div>
 
@@ -153,8 +164,19 @@
                                 </span>
                             </p>
                         </th>
-                        <th>
+                        <!-- <th>
                             <p>Total
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                        width="24px" fill="#e3e3e3">
+                                        <path
+                                            d="M240-80q-33 0-56.5-23.5T160-160v-480q0-33 23.5-56.5T240-720h80q0-66 47-113t113-47q66 0 113 47t47 113h80q33 0 56.5 23.5T800-640v480q0 33-23.5 56.5T720-80H240Zm0-80h480v-480h-80v80q0 17-11.5 28.5T600-520q-17 0-28.5-11.5T560-560v-80H400v80q0 17-11.5 28.5T360-520q-17 0-28.5-11.5T320-560v-80h-80v480Zm160-560h160q0-33-23.5-56.5T480-800q-33 0-56.5 23.5T400-720ZM240-160v-480 480Z" />
+                                    </svg>
+                                </span>
+                            </p>
+                        </th> -->
+                        <th>
+                            <p>Action
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
                                         width="24px" fill="#e3e3e3">
@@ -181,7 +203,17 @@
                         <td>{{ $item->bill_amount ?? '-' }}</td>
                         <td>{{ $item->advance ?? '-' }}</td>
                         <td>{{ $item->due ?? '-' }}</td>
-                        <td>{{ $item->total ?? '-' }}</td>
+                        <!-- <td>{{ $item->total ?? '-' }}</td> -->
+                        <td><button type="button" class="cr_ind_btn btn border-0 edit-entry-btn" data-bs-toggle="modal"
+                                data-bs-target="#editindent" data-id="{{ $item->id }}"
+                                data-date="{{ date('Y-m-d', strtotime($item->created_at)) }}"
+                                data-voucher="{{ $item->voucher_number }}" data-lot="{{ $item->lot }}"
+                                data-bag="{{ $item->bag }}" data-payment_method="{{ $item->payment_method }}"
+                                data-category="{{ $item->category }}" data-qty="{{ $item->qty }}"
+                                data-rate="{{ $item->rate }}" data-bill="{{ $item->bill_amount }}"
+                                data-advance="{{ $item->advance }}" data-due="{{ $item->due }}">
+                                Edit
+                            </button></td>
                     </tr>
                     @endforeach
                     @else
@@ -196,4 +228,43 @@
 
     </div>
 </section>
+@push('scripts')
+<script>
+$(document).ready(function() {
+    $('.edit-entry-btn').on('click', function() {
+        // বাটন থেকে ডেটা নেওয়া
+        let id = $(this).data('id');
+
+        let date = $(this).data('date');
+        let voucher = $(this).data('voucher');
+        let lot = $(this).data('lot');
+        let bag = $(this).data('bag');
+        let payment_method = $(this).data('payment_method');
+        let category = $(this).data('category');
+        let qty = $(this).data('qty');
+        let rate = $(this).data('rate');
+        let bill = $(this).data('bill');
+        let advance = $(this).data('advance');
+        let due = $(this).data('due');
+
+        // মডালের ইনপুটে ডেটা বসানো
+        $('#edit_entry_id').val(id);
+        $('#edit_date').val(date);
+        $('#edit_voucher').val(voucher);
+        $('#edit_lot').val(lot);
+        $('#edit_bag').val(bag);
+        $('#edit_payment_method').val(payment_method);
+        $('#edit_category').val(category);
+        $('#edit_qty').val(qty);
+        $('#edit_rate').val(rate);
+        $('#edit_bill').val(bill);
+        $('#edit_advance').val(advance);
+        $('#edit_due').val(due);
+    });
+
+    let updateUrl = "{{ url('/entries/edit') }}/" + id;
+    $('#editEntryForm').attr('action', updateUrl);
+});
+</script>
+@endpush
 @endsection

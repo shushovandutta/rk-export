@@ -90,6 +90,28 @@ class ClientController extends Controller
     }
 
 
+    public function updateEntry(Request $request)
+    {
+        $entry = Entry::findOrFail($request->entry_id);
+
+        $entry->update([
+            'voucher_number' => $request->voucher,
+            'lot'            => $request->lot,
+            'bag'            => $request->bag,
+            'payment_method' => $request->payment_method,
+            'category'       => $request->category,
+            'qty'            => $request->received_qty,
+            'rate'           => $request->rate,
+            'bill_amount'    => $request->bill_amount,
+            'advance'        => $request->advance,
+            'due'            => $request->due,
+            'entry_date'     => $request->entry_date
+        ]);
+
+        return redirect()->back()->with('success', 'Entry updated successfully!');
+    }
+
+
     public function projectStatusUpdate($id)
     {
         Project::where('id', $id)->update([

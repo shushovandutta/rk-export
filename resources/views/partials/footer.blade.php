@@ -205,6 +205,33 @@
     </div>
 </div>
 
+<!-- Create Client Modal -->
+@if (request()->is('entry-list*') || request()->is('entry-list/*'))
+<div class="modal inner_folder modal-xl fade" id="editindent" tabindex="-1" aria-labelledby="createindentmodel"
+    aria-hidden="true">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title fs-6" id="editindentmodel">
+                    Edit Entry
+                </h4>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="zmdi zmdi-close"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                @includeIf('partials.edit-entry-modal')
+            </div>
+
+        </div>
+    </div>
+</div>
+@endif
+
 <span class="screen-darken"></span>
 
 <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>

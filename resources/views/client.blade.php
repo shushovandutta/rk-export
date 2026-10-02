@@ -4,7 +4,16 @@
 
 @section('content')
 <section class="folder_sec p-0">
+    @if(session()->has('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{session('success')}}</strong>
+    </div>
+    @elseif(session()->has('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>{{session('error')}}</strong>
+    </div>
 
+    @endif
     {{-- Top Action Bar & Stats --}}
     <div class="client-activity">
         <div class="d-flex justify-content-between align-items-center mb-3">
