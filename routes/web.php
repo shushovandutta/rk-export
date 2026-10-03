@@ -2,10 +2,15 @@
 
 use App\Http\Controllers\Authcontroller;
 use App\Http\Controllers\ClientController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->to(route('login'));
+    if (!Auth::check()) {
+        return redirect()->to(route('login'));
+    } else {
+        return redirect()->to(route('dashboard'));
+    }
 });
 
 
@@ -19,7 +24,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get("/dashboard", function () {
         return view('dashboard');
-    });
+    })->name('dashboard');
 
     Route::get("/client", [ClientController::class, 'index']);
     Route::post("/client/create", [ClientController::class, 'create']);
